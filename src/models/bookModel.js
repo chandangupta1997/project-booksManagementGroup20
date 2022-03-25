@@ -39,6 +39,7 @@ const bookSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    //{Date, mandatory, format("YYYY-MM-DD")}
     releasedAt:{
         type:Date,
         required:"Date is required"

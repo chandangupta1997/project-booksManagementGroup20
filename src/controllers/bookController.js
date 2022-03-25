@@ -17,7 +17,10 @@ const createBook = async function(req,res){
         return
     }
 
-    const {title,excerpt,userId,ISBN,category,subcategory,reviews}=data
+    //validation starts
+
+
+    const {title,excerpt,userId,ISBN,category,subCategory,reviews,releasedAt}=data
 
 
 
@@ -26,26 +29,46 @@ const createBook = async function(req,res){
         return
     }
     if(!validations.isValid(excerpt)){
-     res.status(400).send({status:"false",msg:"please enter valid name"})
+     res.status(400).send({status:"false",msg:"please enter valid excerpt"})
      return
     }
 
     //check it in mongoose also 
     if(!validations.isValid(userId)){
-     res.status(400).send({status:"false",msg:"please enter valid phone "})
+     res.status(400).send({status:"false",msg:"please enter valid userId"})
      return
     }
     if(!validations.isValid(ISBN)){
-     res.status(400).send({status:"false",msg:"please enter valid email"})
+     res.status(400).send({status:"false",msg:" ISBN is empty"})
      return
     }
     if(!validations.isValid(category)){
-     res.status(400).send({status:"false",msg:"please enter valid phone"})
+     res.status(400).send({status:"false",msg:"please enter valid category"})
      return
 
     }
 
-    //validation starts
+    if(!validations.isValid(subCategory)){
+        res.status(400).send({status:"false",msg:"please enter valid subCategory"})
+        return}
+
+    // if(validations.isValid(reviews)){ 
+    //     res.status(400).send({status:"false",msg:"reviews should not be empty 56"})
+    //     return
+    // //  
+
+
+    
+           
+     // format("YYYY-MM-DD")}, use regex or any other technique        
+     if(!validations.isValid(releasedAt)){
+         res.status(400).send({status:"false",msg:"released at  should not be empty"})
+            return}
+    
+
+
+
+    
 
     //validation finish
 
