@@ -10,6 +10,11 @@ const userController=require("../controllers/userController")
 router.post("/createBook",bookController.createBook)
 
 
+//createUser
+
+router.post("/createUser",userController.createUser)
+
+
 
 
 

@@ -27,7 +27,7 @@ const createBook = async function(req,res){
 
    //later on we will destructure data 
 
-    const newBook = await bookSchema.create(data)
+    const newBook = await bookModel.create(data)
     res.send(newBook)
     
 
@@ -38,3 +38,6 @@ const createBook = async function(req,res){
         res.status(500).send({status:"false",msg:error.message})
     }
 }
+
+
+module.exports.createBook =createBook
