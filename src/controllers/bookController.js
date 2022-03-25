@@ -19,6 +19,32 @@ const createBook = async function(req,res){
 
     const {title,excerpt,userId,ISBN,category,subcategory,reviews}=data
 
+
+
+    if(!validations.isValid(title)){
+        res.status(400).send({status:"false",msg:"please enter valid title"})
+        return
+    }
+    if(!validations.isValid(excerpt)){
+     res.status(400).send({status:"false",msg:"please enter valid name"})
+     return
+    }
+
+    //check it in mongoose also 
+    if(!validations.isValid(userId)){
+     res.status(400).send({status:"false",msg:"please enter valid phone "})
+     return
+    }
+    if(!validations.isValid(ISBN)){
+     res.status(400).send({status:"false",msg:"please enter valid email"})
+     return
+    }
+    if(!validations.isValid(category)){
+     res.status(400).send({status:"false",msg:"please enter valid phone"})
+     return
+
+    }
+
     //validation starts
 
     //validation finish
