@@ -89,4 +89,23 @@ const createBook = async function(req,res){
 }
 
 
+const getBook = async function(req,res){
+
+    let body
+
+
+
+}
+
+const updateBook =async function(req,res){
+
+}
+
+
+
+
+
+
 module.exports.createBook =createBook
+module.exports.getBook=getBook
+module.exports.updateBook=updateBook

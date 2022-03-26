@@ -33,7 +33,16 @@ address:{
         type:String},
      pincode:{
     type:String}
- }
+ },
+
+ createdAt:{type:Date,
+    default:Date.now()},
+updatedAt:{type:Date,
+        default:Date.now()}  
+
+
+    
+
 },{timestamp:true})
 module.exports =mongoose.model('user',userSchema)
 

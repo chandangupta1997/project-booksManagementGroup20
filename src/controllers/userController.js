@@ -67,7 +67,8 @@ const createUser = async function (req, res) {
 
         }
         if (password.trim().lenght < 3 || password.trim().length > 16) {
-            res.status(400).send({ status: false, msg: "please enter a   15 >passsword>3 " })
+            res.status(400).send({ status: false, msg: "please enter a   15 >passsword>3 " });
+            return
         }
 
         //email validations
@@ -169,11 +170,19 @@ const loginUser = async function (req, res) {
 
 
 
+const getUser =async function(req,res){
+
+
+}
+
+
+
 
 
 
 module.exports.loginUser = loginUser
 module.exports.createUser = createUser
+module.exports.getUser=getUser
 
 
 
