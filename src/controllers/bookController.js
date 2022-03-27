@@ -25,31 +25,31 @@ const createBook = async function(req,res){
 
 
     if(!validations.isValid(title)){
-        res.status(400).send({status:"false",msg:"please enter valid title"})
+        res.status(400).send({status:"false",msg:"please enter valid title"});
         return
     }
     if(!validations.isValid(excerpt)){
-     res.status(400).send({status:"false",msg:"please enter valid excerpt"})
+     res.status(400).send({status:"false",msg:"please enter valid excerpt"});
      return
     }
 
     //check it in mongoose also 
     if(!validations.isValid(userId)){
-     res.status(400).send({status:"false",msg:"please enter valid userId"})
+     res.status(400).send({status:"false",msg:"please enter valid userId"});
      return
     }
     if(!validations.isValid(ISBN)){
-     res.status(400).send({status:"false",msg:" ISBN is empty"})
+     res.status(400).send({status:"false",msg:" ISBN is empty"});
      return
     }
     if(!validations.isValid(category)){
-     res.status(400).send({status:"false",msg:"please enter valid category"})
+     res.status(400).send({status:"false",msg:"please enter valid category"});
      return
 
     }
 
     if(!validations.isValid(subCategory)){
-        res.status(400).send({status:"false",msg:"please enter valid subCategory"})
+        res.status(400).send({status:"false",msg:"please enter valid subCategory"});
         return}
 
     // if(validations.isValid(reviews)){ 
@@ -91,7 +91,64 @@ const createBook = async function(req,res){
 
 const getBook = async function(req,res){
 
-    let body
+    try{
+        const  queryBody =req.query
+        const filterQuery={isDeleted:false};
+
+
+        if(!validations.isValidRequestBody(queryBody)){
+            
+            res.status(400).send({status:"false",msg:"query body should not br empty "});
+            return;
+        }
+
+        // validations starts so deconstructring 
+
+        const{userId,subCategory,category,title}=queryBody
+
+        filterQuery['userId']=userId  //adding in filters
+
+
+        // is userId exists or not 
+
+        // if(validations.isValidObjectId(userId)){
+        //     filterQuery['userId']=userId  //adding in filters
+
+            
+        // }
+        
+
+
+        if(validations.isValid(subCategory)){
+            filterQuery['subCategory']=subCategory
+        
+        }
+        if(validations.isValid(category)){
+            filterQuery['category']=category
+            
+        }
+        if(validations.isValid(title)){
+            filterQuery['title']=title.trim()
+            
+        }
+
+
+
+        const blogs=await bookModel.find(filterQuery)
+
+        //The Array.isArray() method determines whether the passed value is an Array.
+        if(Array.isArray(blogs)&&blogs.lenght===0){
+            res.status(400).send({status:"false",msg:`no blogs found please try different variations`});
+            return;
+        }
+
+        res.status(200).send({status:"true",message:"here is your Blog",data:blogs})
+    }
+
+    catch(error){res.status(500).send({status:"false",msg:error.message});return}
+
+    
+    
 
 
 

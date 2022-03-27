@@ -118,7 +118,8 @@ const loginUser = async function (req, res) {
             res.status(400).send({ status: "false", msg: "body should not be empty pls enter username and pwd  " })
             return
         }
-
+        
+        
 
         const { email, password } = requestBody // destructuting for validation
 

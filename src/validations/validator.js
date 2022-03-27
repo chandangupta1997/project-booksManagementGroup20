@@ -14,7 +14,7 @@ const isValid =function(value){
 
 
 const isValidObjectId=function(objectId){
-    return mongoose.Types.ObjectId.isvalid(objectId)
+    return mongoose.Types.ObjectId.isValid(objectId)
     
     
     
