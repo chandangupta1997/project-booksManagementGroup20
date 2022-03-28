@@ -67,9 +67,11 @@ const getBook = async (req, res) => {
         let filter = {
             isDeleted: false
         }
+
+        //if(!validations.isValidRequestBody(req.query)){res.send("gandi baat ")}
         if (req.query.userId) {
 
-            if (!(validations.isValid(req.query.userId) && validations.isValidObjectId(req.query.userId))) {
+            if ((validations.isValid(req.query.userId) && validations.isValidObjectId(req.query.userId))) {
                 return res.status(400).send({ status: false, msg: "userId is not valid" })
             }
             filter["userId"] = req.query.userId
