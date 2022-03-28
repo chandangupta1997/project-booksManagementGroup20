@@ -34,7 +34,7 @@ address:{
      pincode:{
     type:String}
  }
-},{timestamp:true})
+},{timestamps:true})
 module.exports =mongoose.model('user',userSchema)
 
 

@@ -1,5 +1,5 @@
-const bookModel = require("../model/bookModel")
-const reviewModel = require('../model/reviewModel')
+const bookModel = require("../models/bookModel")
+const reviewModel = require('../models/reviewModel')
 const mongoose = require("mongoose")
 const ObjectId = mongoose.Types.ObjectId
 
