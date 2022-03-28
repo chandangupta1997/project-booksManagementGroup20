@@ -232,7 +232,7 @@ const deleteById = async (req, res) => {
 
     try {
 
-        if ((!validations.isValid(req.params.bookId) && !validations.isValidObjectId(req.params.bookId))) {
+        if ((!validations.isValid(req.params.bookId) && validations.isValidObjectId(req.params.bookId))) {
             return res.status(400).send({ status: false, msg: "bookId is not valid" })
         }
 
@@ -268,7 +268,7 @@ module.exports.updateBook = updateBook
 module.exports.getBookWithreview = getBookWithreview
 module.exports.getBook = getBook
 module.exports.createBook = createBook
-//this is an comment in book controller
+//this is an comment in book controller.
 
 
 
