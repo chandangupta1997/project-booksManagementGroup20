@@ -1,189 +1,96 @@
-const bookModel = require("../models/bookModel")
-const reviewModel = require("../models/reviewModel")
-const userModel = require("../models/userModel")
-const validations = require("../validations/validator")
-const jwt=require("jsonwebtoken")
+const mongoose = require('mongoose')
+const userModel = require('../models/userModel')
+const validations = require('../validations/validator')
 
-
-
-
+const isValidTitle = function (title) {
+    return ["Mr", "Miss", "Mrs"].indexOf(title) !== -1
+}
 const createUser = async function (req, res) {
-
     try {
-        let data = req.body
 
-        if (!validations.isValidRequestBody(data)) {
-
-            res.status(400).send({ status: "false", msg: "body should not be empty " })
-            return
+        if (!validations.isValidRequestBody(req.body)) {
+            return res.status(400).send({ status: false, message: "Parameters in the request body are not valid.Plese enter valid parameters" })
         }
-
-        // accesing for User validation
-        const { title, name, phone, email, password, address } = data
-
-
-        //validation starts
+        let { title, name, phone, email, password } = req.body
         if (!validations.isValid(title)) {
-            res.status(400).send({ status: "false", msg: "please enter valid title" })
-            return
+            return res.status(400).send({ status: false, message: "Title is required" })
         }
+        if (!isValidTitle(title)) {
+            return res.status(400).send({ status: false, message: "Title must be among Mr,Mrs,Miss" })
+        }
+
         if (!validations.isValid(name)) {
-            res.status(400).send({ status: "false", msg: "please enter valid name" })
-            return
+            return res.status(400).send({ status: false, message: "Name is required" })
         }
         if (!validations.isValid(phone)) {
-            res.status(400).send({ status: "false", msg: "please enter valid phone  " })
-            return
+            return res.status(400).send({ status: false, message: "Phone is required" })
         }
-        //phom=ne number regex
-
-        if(!(/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/.test(phone))){
-            return res.status(400).send({status:false,msg:"Number should be a valid Number line 40"})
+        if (!(String(phone).length === 10)) {
+            return res.status(400).send({ status: false, message: "Please enter valid phone number" })
         }
-
-        const isphoneAlreadyExist=  await userModel.findOne({phone})//findOne({email:email})
-        if(isphoneAlreadyExist){res.status(400).send({status:"false",msg:`${phone} already exist `});return}
-
-
+        if (!/^(\+\d{1,3}[- ]?)?\d{10}$/.test(phone)) {
+            return res.status(400).send({ status: false, message: `${phone} is not a valid phone number` })
+        }
+        const isPhonealreadyExist = await userModel.findOne({ phone })
+        if (isPhonealreadyExist) {
+            return res.status(400).send({ status: false, message: `${phone} Phone number already exists` })
+        }
         if (!validations.isValid(email)) {
-            res.status(400).send({ status: "false", msg: "please enter valid email" })
-            return
+            return res.status(400).send({ status: false, message: "Email is required" })
         }
-
-        // email validation using regex 
-
-
-        if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
-            res.status(400).send({status: false, message: `Email should be a valid email address`})
-            return
+        if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
+            return res.status(400).send({ status: false, message: "Email is not valid. Please provide a valid email" })
         }
-
-        const isEmailAlreadyExist=  await userModel.findOne({email})//findOne({email:email})
-        if(isEmailAlreadyExist){res.status(400).send({status:"false",msg:`${email} already exist `});return}
-
+        const isEmailalreadyExist = await userModel.findOne({ email:email })
+        if (isEmailalreadyExist) {
+            return res.status(200).send({ status: false, message: "Email already exists" })
+        }
         if (!validations.isValid(password)) {
-            res.status(400).send({ status: "false", msg: "please enter valid phone" })
-            return
-
+            return res.status(400).send({ status: false, message: "Password is required" })
         }
-        if (password.trim().lenght < 3 || password.trim().length > 16) {
-            res.status(400).send({ status: false, msg: "please enter a   15 >passsword>3 " });
-            return
+        if (!validations.isValid(password.trim().lenght >= 8 || password.trim().length <= 15)) {
+            res.status(400).send({ status: false, message: "Please enter a password of at least 8 characters but less than 16 characters" })
         }
-
-        //email validations
-
-
-
-
-
-
-
-        // validation ends 
-
-        //accesing it for blog creation
-
-        const bookData = { title, name, phone, email, password, address }
-
-        const newBook = await userModel.create(data)
-
-        res.status(201).send({ status: "true", msg: "book created successfully ", see: newBook })
+        let savedUser = await userModel.create(req.body)
+        return res.status(201).send({ status: true, message: "Successfully created", data: savedUser })
 
     }
-
-
-
-    catch (error) { res.send({ status: "false", msg: error.message }) }
-
-
-
-
-
+    catch (err) {
+        return res.status(500).send({ status: false, error: err.message })
+    }
 }
-
-
-
-
-
-//authnetication providing token
-
 const loginUser = async function (req, res) {
-
-
-
     try {
-        let requestBody = req.body
-
-        if (!validations.isValidRequestBody(requestBody)) {
-            res.status(400).send({ status: "false", msg: "body should not be empty pls enter username and pwd  " })
-            return
+        const requestBody = req.body
+        if (!validations.isValidRequestBody(req.body)) {
+            return res.status(400).send({ status: false, message: "Invalid request parameters" })
         }
-        
-        
-
-        const { email, password } = requestBody // destructuting for validation
-
-        //validation starts
-
+        const { email, password } = req.body
         if (!validations.isValid(email)) {
-            res.status(400).send({ status: "false", msg: "please enter valid email" })
-            return
-
+            return res.status(400).send({ status: false, message: "Email is required" })
         }
         if (!validations.isValid(password)) {
-            res.status(400).send({ status: "false", msg: "please enter valid password" })
-            return
-
+            return res.status(400).send({ status: false, message: "Password is required" })
         }
-
-        // you can skip email and password validation as it is checked earlier 
-        // we just need to find that it exist in database or not 
-
-        // let author =await userModel.findOne({email:email},{password:password})
-
-        let user = await userModel.findOne({ email, password })
-        if (!user) { res.status().send({ status: false, msg: "gaddar" }); return }
-
-
-        // issuing token
-
-        let token = jwt.sign({
-
-            userId: user._id,
-            iat: Date.now(), // time 
-            expiry: Date.now() + 1800  //expiry 30 min so 1800s
-
-
-        }, "room20")
-
-        res.setHeader["x-auth-key", token] //sending in header 
-
-        res.status(200).send({ status: "true", msg: "user login successfull", data: { token } })
-
+        const user=await userModel.findOne({email:email, password:password})
+        if(!user) {
+            return res.status(400).send({ status: false, message: "Invalid login credentials"})
+        }
+        let token = await jwt.sign(
+            {
+                userId: user._id.toString(),
+                batch:"thorium",
+                organisation:"Function",
+                iat: Date.now(), // time 
+                expiry: Date.now() + 1800  //expiry 30 min so 1800s
+    
+            },
+            "Group20"
+        )
+        res.setHeader("x-api-key",token);
+        res.status(200).send({status: true, message:"User login successful",data:(token)})
+    } catch (err) {
+        return res.status(400).send({ status: false, error: err.message })
     }
-
-
-
-    catch (error) { res.status(500).send({ status: "false", msg: error.message }) }
-
-
 }
-
-
-
-const getUser =async function(req,res){
-
-
-}
-
-
-
-
-
-
-module.exports.loginUser = loginUser
-module.exports.createUser = createUser
-module.exports.getUser=getUser
-
-
-
+    module.exports = { createUser ,loginUser}
