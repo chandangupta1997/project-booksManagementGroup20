@@ -150,8 +150,9 @@ const loginUser = async function (req, res) {
         let token = jwt.sign({
 
             userId: user._id,
+            batch:"thorium",
             iat: Date.now(), // time 
-            expiry: Date.now() + 1800  //expiry 30 min so 1800s
+            expiry: Date.now() + 10*60*60  //expiry 30 min so 1800s
 
 
         }, "room20")

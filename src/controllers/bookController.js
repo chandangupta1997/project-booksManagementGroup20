@@ -111,11 +111,11 @@ const getBook = async function(req,res){
 
         // is userId exists or not 
 
-        // if(validations.isValidObjectId(userId)){
-        //     filterQuery['userId']=userId  //adding in filters
+        if(validations.isValidObjectId(userId)){
+            filterQuery['userId']=userId  //adding in filters
 
             
-        // }
+        }
         
 
 
@@ -142,6 +142,8 @@ const getBook = async function(req,res){
             return;
         }
 
+        // we need to short in alphabatical order
+
         res.status(200).send({status:"true",message:"here is your Blog",data:blogs})
     }
 
@@ -159,6 +161,27 @@ const updateBook =async function(req,res){
 }
 
 
+const deleteBook =async function(req,res){
+
+    let bookId =req.param  // kyuki wo  param ma di hai 
+    // validate it 
+
+
+    //checkin exist or not 
+
+    let bookById = await bookModel.findOne({_id:bookId})
+    //agr hai to bhejo nhi to aage badho 
+
+
+    
+
+
+   
+
+
+
+}
+
 
 
 
@@ -166,3 +189,4 @@ const updateBook =async function(req,res){
 module.exports.createBook =createBook
 module.exports.getBook=getBook
 module.exports.updateBook=updateBook
+module.exports.deleteBook=deleteBook
