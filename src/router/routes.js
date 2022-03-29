@@ -1,42 +1,23 @@
 const express = require('express');
 const router = express.Router();
-
 const bookController=require("../controllers/bookController")
 const reviewController=require("../controllers/reviewController")
 const userController=require("../controllers/userController")
-
+const middleware = require("../middleware/auth")
 
 //createBook 
 router.post("/createBook",bookController.createBook)
-router.get("/getBook/books/:bookId",bookController.getBooksById)
 router.get("/getBook",bookController.getBook)
-router.put("/updateBook/books/:bookId",bookController.updateBookById)
-router.put("/deleteBook/books/:bookId",bookController.deleteById)
+router.get("/book/:bookId",middleware.authorise,bookController.getBooksById)
 
+router.put("/book/:bookId",middleware.authorise,bookController.updateBookById)
+router.delete("/book/:bookId",middleware.authorise,bookController.deleteById)
 
 //createUser
-
 router.post("/createUser",userController.createUser)
-
-
 router.post("/loginUser",userController.loginUser)
 
-
-
-
 // adding Review 
-
-router.post("/addReview/books/:bookId/review",reviewController.addReview)
-
-
-
-
-
-
-
-
-
-
-
+//router.post("/addReview/:bookId/review",reviewContrroller.addReview)
 
 module.exports = router;
