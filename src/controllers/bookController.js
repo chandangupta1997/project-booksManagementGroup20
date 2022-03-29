@@ -69,7 +69,7 @@ const getBook = async (req, res) => {
         }
         if (req.query.userId) {
 
-            if (!(validations.isValid(req.query.userId) && validations.isValidObjectId(req.query.userId))) {
+            if (!(validations.isValid(req.query.userId) || validations.isValidObjectId(req.query.userId))) {
                 return res.status(400).send({ status: false, msg: "userId is not valid" })
             }
             filter["userId"] = req.query.userId
@@ -158,7 +158,7 @@ const updateBookById = async (req, res) => {
         let filter = {
             _id: req.params.bookId,
             isDeleted: false,
-            userId: req.decodeToken._id
+           // userId: req.decodeToken._id
         }
         let update = {}
         if (!validations.isValidRequestBody(req.body)) {
@@ -168,9 +168,9 @@ const updateBookById = async (req, res) => {
         if (!book) {
             return res.status(404).send({ status: false, message: `Book not found` })
         }
-        if (book.userId.toString() !== req.decodeToken._id) {
-            return res.status(401).send({ status: false, message: `Unauthorized access!` });
-        }
+        // if (book.userId.toString() !== req.decodeToken._id) {
+        //     return res.status(401).send({ status: false, message: `Unauthorized access!` });
+        // }
         let { title, excerpt, releasedAt, ISBN } = req.body
 
         if (title) {
