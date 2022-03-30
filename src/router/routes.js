@@ -9,12 +9,12 @@ const middleware = require("../middleware/auth")
 router.post("/createUser",userController.createUser)
 router.post("/loginUser",userController.loginUser)
 //createBook 
-router.post("/createBook",bookController.createBook)
+router.post("/createBook",middleware.authorise,bookController.createBook)
 router.get("/getBook",bookController.getBook)
 router.get("/books/:bookId",bookController.getBooksById)
 
-router.put("/books/:bookId",bookController.updateBookById)
-router.delete("/books/:bookId",bookController.deleteById)
+router.put("/books/:bookId",middleware.authorise,bookController.updateBookById)
+router.delete("/books/:bookId",middleware.authorise,bookController.deleteById)
 
 
 

@@ -6,7 +6,7 @@ const validations=require("../validations/validator")
 
 const addReview = async (req, res) => {
     try {
-        if (!validations.isValid(req.params.bookId) && validations.isValidObjectId(req.params.bookId)) {
+        if (!(validations.isValid(req.params.bookId) && validations.isValidObjectId(req.params.bookId))) {
             return res.status(400).send({ status: false, msg: "BookId is not valid" })
         }
         if (!validations.isValidRequestBody(req.body)) {

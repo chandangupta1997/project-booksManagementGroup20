@@ -204,7 +204,7 @@ const updateBookById = async (req, res) => {
 const deleteById = async (req, res) => {
     try {
          let id = req.params.bookId
-        if (!validations.isValid(req.params.bookId) && ! validations.isValidObjectId(req.params.bookId)) {
+        if (!(validations.isValid(req.params.bookId) && validations.isValidObjectId(req.params.bookId))) {
             return res.status(400).send({ status: false, msg: "bookId is not valid" })
         }
         let filter = {
@@ -214,7 +214,7 @@ const deleteById = async (req, res) => {
          
         const book = await bookModel.findOne({ _id: req.params.bookId, isDeleted: false })
         if (!book) {
-            return res.status(404).send({ status: false, message: `Book not found` })
+            return res.status(404).send({ status: false, message: `Book not found or already deleted ` })
         }
         let deletedBook = await bookModel.findOneAndUpdate(filter, { isDeleted: true, deletedAt: new Date() })
         if (deletedBook) {
