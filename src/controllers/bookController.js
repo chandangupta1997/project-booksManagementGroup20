@@ -5,7 +5,7 @@ const validations = require('../validations/validator.js')
 const createBook=async function(req, res) {
     try{
         if (!validations.isValidRequestBody(req.body)) 
-            return res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide collage details' })
+            return res.status(400).send({ status: false, message: 'body is empty please provide some data to create book  ' })
         
         let { title, excerpt, userId ,ISBN ,category,subCategory,reviews,isDeleted,releasedAt} = req.body
 
@@ -42,7 +42,7 @@ const createBook=async function(req, res) {
             return res.status(400).send({ status: false, message: ' Please provide a valid ReleasedAt date' })
 
         }
-        
+        // date regex
         if (!/((\d{4}[\/-])(\d{2}[\/-])(\d{2}))/.test(releasedAt)) {
             return res.status(400).send({ status: false, message: ' \"YYYY-MM-DD\" this Date format & only number format is accepted ' })
         }
@@ -97,7 +97,7 @@ const getBook = async (req, res) => {
             return res.status(200).send({ status: true, message: "book  list", data: book })
 
         } else {
-            return res.status(404).send({ status: false, message: "no such book found !!" })
+            return res.status(404).send({ status: false, message: "no such book found !! please try different variations " })
 
         }
     } catch (err) {
@@ -109,11 +109,19 @@ const getBook = async (req, res) => {
 const getBooksById= async (req, res) => {
     try{
         if (!validations.isValid(req.params.bookId) && !validations.isValidObjectId(req.params.bookId)) {
-            return res.status(400).send({ status: false, msg: "bookId is not valid" })
+            res.status(400).send({ status: false, msg: "bookId is not valid" }); return
     }
+
+    // let bookId =req.params.bookId
+
+    // if(!validations.isValidObjectId(bookId)){
+    //     res.send("okok") 
+    //     return 
+    // }
     let books = await bookModel.findOne({ _id: req.params.bookId, isDeleted: false })
+    console.log(books)
     if (!books) {
-        return res.status(404).send({ status: false, message: "no such book found !!" })
+        return res.status(404).send({ status: false, message: "no such book found !! " })
         }
         let addedrew = JSON.parse(JSON.stringify(books))
         let findrew = await reviewModel.find({bookId:req.params.bookId}) 
@@ -138,6 +146,7 @@ const updateBookById = async (req, res) => {
         if (!validations.isValidRequestBody(req.body)) {
             return res.status(400).send({ status: false, message: 'body is empty' })
         }
+       
         const book = await bookModel.findOne({ _id: req.params.bookId, isDeleted: false })
         if (!book) {
             return res.status(404).send({ status: false, message: `Book not found by the given id` })
@@ -149,12 +158,20 @@ const updateBookById = async (req, res) => {
                if (!validations.isValid(title)) {
                 return res.status(400).send({ status: false, message: 'title is not valid or empty' })
             }
+            // duplicacy check 
+
+            let titleCheck =await bookModel.findOne({title:title})
+            if(titleCheck){res.status(400).send("title duplicate One");
+        return }
             update['title'] = title
         }
         if (excerpt) {
             if (!validations.isValid(excerpt)) {
                 return res.status(400).send({ status: false, message: 'excerpt is not valid ' })
             }
+            let excerptCheck =await bookModel.findOne({excerpt:excerpt})
+            if(excerptCheck){res.status(400).send(" excerpt duplicate One");
+        return }
             update['excerpt'] = excerpt
         }
         if (ISBN) {
@@ -171,6 +188,7 @@ const updateBookById = async (req, res) => {
                 return res.status(400).send({ status: false, message:' \"YYYY-MM-DD\" only this Date format is supported'})
             }
         }
+       
         let updatedBook = await bookModel.findOneAndUpdate(filter, update, { new: true })
         if (updatedBook) {
             return res.status(200).send({ status: true, message: "success", data: updatedBook })

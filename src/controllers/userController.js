@@ -61,9 +61,12 @@ const createUser = async function (req, res) {
         // if (!validations.isValid(password.trim().lenght >= 8 && password.trim().length <= 15)) {
         //     res.status(400).send({ status: false, message: "Please enter a password of at least 8 characters but less than 16 characters" })
         // }
-        if (!(/^[a-zA-Z0-9!@#$%^&*]{6,16}$/.test(password))) {
-            return res.status(400).send({ status: false, message: "Email is not valid. Please provide a valid email" })
+        if (!(/^[a-zA-Z0-9!@#$%^&*]{8,15}$/.test(password))) {
+            return res.status(400).send({ status: false, message: "password should beteen 8--15 "})
         }
+        // we should add partiuccular
+
+        //if(password.length<15) {}
         let savedUser = await userModel.create(req.body)
         return res.status(201).send({ status: true, message: "Successfully created", data: savedUser })
 

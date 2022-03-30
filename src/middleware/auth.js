@@ -34,7 +34,7 @@ let authorise=async function(req, res, next){
         let userId = findBook.userId
         if (userId != decodedId)
         {
-           return res.status(400).send({status:false,message:"You are not to get data"})
+           return res.status(400).send({status:false,message:"You are not authorised"})
         }
          next()
     }catch(err){
