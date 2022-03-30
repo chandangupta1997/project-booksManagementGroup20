@@ -14,13 +14,8 @@ const addReview = async (req, res) => {
 
         }
         let { reviewedBy, rating, review } = req.body
-
-        if (!validations.isValid(reviewedBy)) {
-            return res.status(400).send({ status: false, message: 'ReviewedBy is not valid ' })
-
-        }
         if (!validations.isValid(review)) {
-            return res.status(400).send({ status: false, message: 'Review is not valid' })
+            return res.status(400).send({ status: false, message: 'Reviewe is not valid' })
         }
         if (!validations.isValid(rating)) {
             return res.status(400).send({ status: false, message: 'Rating is not valid' })
@@ -54,7 +49,6 @@ const addReview = async (req, res) => {
 
     }
 }
-module.exports.addReview = addReview
 
 //----------------------------------------------------------------------------------------------------------------
 
@@ -119,7 +113,7 @@ const updateReview = async (req, res) => {
     }
 }
 
-module.exports.updateReview = updateReview
+
 //-----------------------------------------------------------------------------------------------------------------
 
 const deleteReview = async function (req, res) {
@@ -127,19 +121,19 @@ const deleteReview = async function (req, res) {
         const bookId= req.params.bookId
         const reviewId = req.params.reviewId
 
-        if (!validators.isValidObjectId(bookId)) {
+        if (!validations.isValidObjectId(bookId)) {
             return res.status(400).send({ status: false, message: `${bookId} is not a valid book id` })
         }
 
-        if (!validators.isValidObjectId(reviewId)) {
+        if (!validations.isValidObjectId(reviewId)) {
             res.status(400).send({ status: false, message: `${reviewId} is not a valid review id` })
         }
 
-        const book = await BookModel.findOne({ _id: bookId, isDeleted: false})
+        const book = await bookModel.findOne({ _id: bookId, isDeleted: false})
 
         if(!book) return res.status(404).send({ status: false, message:'Book not found'})
 
-        const review = await ReviewModel.findOne({ _id: reviewId, bookId: bookId, isDeleted: false })
+        const review = await reviewModel.findOne({ _id: reviewId, bookId: bookId, isDeleted: false })
 
         if (!review) {
             return res.status(404).send({ status: false, message:`Review not found` })
@@ -155,5 +149,6 @@ const deleteReview = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message });
     }
 }
-
+module.exports.addReview = addReview
+module.exports.updateReview = updateReview
 module.exports.deleteReview = deleteReview
