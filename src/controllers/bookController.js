@@ -154,18 +154,30 @@ const updateBookById = async (req, res) => {
                if (!validations.isValid(title)) {
                 return res.status(400).send({ status: false, message: 'title is not valid or empty' })
             }
+
+            let titleCheck= await bookModel.findOne({title:title})
+            if(titleCheck){res.status(400).send({status:"false",msg:"duplicate  title "});
+            return }
             update['title'] = title
         }
         if (excerpt) {
             if (!validations.isValid(excerpt)) {
                 return res.status(400).send({ status: false, message: 'excerpt is not valid ' })
             }
+
+            let excerptCheck= await bookModel.findOne({excerpt:excerpt})
+            if(excerptCheck){res.status(400).send({status:"false",msg:"duplicate  excerpt"});
+            return }
             update['excerpt'] = excerpt
         }
         if (ISBN) {
                 if (!validations.isValid(ISBN)) {
                 return res.status(400).send({ status: false, message: 'ISBN is not valid ' })
             }
+
+            let ISBNCheck= await bookModel.findOne({ISBN:ISBN})
+            if(ISBNCheck){res.status(400).send({status:"false",msg:"duplicate  ISBN"});
+            return }
             update['ISBN'] = ISBN
         }
         if (releasedAt) {
