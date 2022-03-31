@@ -17,6 +17,8 @@ let authorise = async function (req, res, next) {
             if (decodedToken.userId != req.body.userId) return res.status(400).send({ status: false, msg: "You are not authorised user" })
         }
 
+        // if(decodedToken.exp){res.status(401).send({status:"false",msg:"token expired please login again"})}
+
         if (bookId = req.params.bookId) {
             const bookId = req.params.bookId
             if (!(validations.isValid(bookId) && validations.isValidObjectId(bookId))) {
@@ -35,3 +37,4 @@ let authorise = async function (req, res, next) {
 }
 
 module.exports.authorise = authorise
+
