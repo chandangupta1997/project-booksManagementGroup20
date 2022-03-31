@@ -99,12 +99,14 @@ const loginUser = async function (req, res) {
                 userId: user._id.toString(),
                 batch:"thorium",
                 organisation:"Function",
-                iat: Date.now(), // time 
-                expiry: Date.now() + 10*60*60 //expiry 30 min so 1800s
+                // iat: Date.now(), // time 
+                // expiry: Date.now() + 10*60*60 //expiry 30 min so 1800s
+                //{ expiresIn: "30m" }
     
             },
-            "Group20"
-        )
+            "Group20",
+            { expiresIn: "30m" })
+
         res.setHeader["x-api-key",token];
         res.status(200).send({status: true, message:"User login successful",data:(token)})
     } catch (err) {
