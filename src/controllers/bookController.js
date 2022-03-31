@@ -156,7 +156,7 @@ const updateBookById = async (req, res) => {
             }
 
             let titleCheck= await bookModel.findOne({title:title})
-            if(titleCheck){res.status(400).send({status:"false",msg:"duplicate  title "});
+            if(titleCheck){res.status(400).send({status:"false",msg:" title already in USe "});
             return }
             update['title'] = title
         }
@@ -166,7 +166,7 @@ const updateBookById = async (req, res) => {
             }
 
             let excerptCheck= await bookModel.findOne({excerpt:excerpt})
-            if(excerptCheck){res.status(400).send({status:"false",msg:"duplicate  excerpt"});
+            if(excerptCheck){res.status(400).send({status:"false",msg:" excerpt already in use "});
             return }
             update['excerpt'] = excerpt
         }
@@ -176,7 +176,7 @@ const updateBookById = async (req, res) => {
             }
 
             let ISBNCheck= await bookModel.findOne({ISBN:ISBN})
-            if(ISBNCheck){res.status(400).send({status:"false",msg:"duplicate  ISBN"});
+            if(ISBNCheck){res.status(400).send({status:"false",msg:"duplicate  ISBN already in use "});
             return }
             update['ISBN'] = ISBN
         }
