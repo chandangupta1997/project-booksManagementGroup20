@@ -2,6 +2,8 @@ const bookModel =require('../models/bookModel')
 const userModel = require('../models/userModel')
 const reviewModel= require('../models/reviewModel')
 const validations = require('../validations/validator.js')
+
+// createBook
 const createBook=async function(req, res) {
     try{
         if (!validations.isValidRequestBody(req.body)) 
@@ -32,7 +34,7 @@ const createBook=async function(req, res) {
             return res.status(400).send({ status: false, message:"No user exist by this id"})
         }
        if(!validations.isValid(ISBN)){
-           return res.status(400).send({ status: false, message:"Isbn is required"})
+           return res.status(400).send({ status: false, message:"ISBN is required"})
        }
        const isISBNalreadyexist=await bookModel.findOne({ISBN:ISBN})
        if(isISBNalreadyexist){
@@ -67,7 +69,9 @@ const createBook=async function(req, res) {
 }
 
 
-//-----------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
+
+//getBook
 const getBook = async (req, res) => {
     try {
         let filter = {
@@ -111,6 +115,10 @@ const getBook = async (req, res) => {
 }
 
 //-----------------------------------------------------------------------------------------------------------------
+
+
+
+//getBooksById
 const getBooksById= async (req, res) => {
     try{
         if (!validations.isValid(req.params.bookId) && !validations.isValidObjectId(req.params.bookId)) {
@@ -133,6 +141,9 @@ const getBooksById= async (req, res) => {
 
 
 //-----------------------------------------------------------------------------------------------------------------
+
+
+//updateBookById
 const updateBookById = async (req, res) => {
     try {
         let filter = {
@@ -201,6 +212,8 @@ const updateBookById = async (req, res) => {
 
 
 //-----------------------------------------------------------------------------------------------------------------
+
+//deleteById
 const deleteById = async (req, res) => {
     try {
          let id = req.params.bookId
