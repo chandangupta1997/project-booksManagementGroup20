@@ -113,7 +113,7 @@ const getBook = async (req, res) => {
 //-----------------------------------------------------------------------------------------------------------------
 const getBooksById= async (req, res) => {
     try{
-        if (!validations.isValid(req.params.bookId) && !validations.isValidObjectId(req.params.bookId)) {
+        if (!(validations.isValid(req.params.bookId) && validations.isValidObjectId(req.params.bookId))) {
             return res.status(400).send({ status: false, msg: "bookId is not valid" })
     }
     let books = await bookModel.findOne({ _id: req.params.bookId, isDeleted: false })
